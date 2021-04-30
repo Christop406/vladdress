@@ -1,0 +1,41 @@
+{
+  "name": "vladdress",
+  "version": "1.1.19",
+  "description": "Lightweight Street Address Parser Written in TypeScript",
+  "scripts": {
+    "pretest": "eslint test/**/*.ts --fix",
+    "test": "mocha --reporter spec",
+    "start": "ts-node src/index.ts",
+    "lint": "eslint src/**/*.ts --fix",
+    "build": "tsc"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Christop406/addresser.git"
+  },
+  "keywords": [
+    "address",
+    "parser",
+    "street"
+  ],
+  "author": "Chris Gilardi <chris.gilardi@vidaloop.com> (https://chrisgilardi.com/)",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Christop406/addresser/issues"
+  },
+  "homepage": "https://github.com/Christop406/addresser#readme",
+  "devDependencies": {
+    "@types/chai": "^4.2.17",
+    "@types/mocha": "^8.2.2",
+    "@types/node": "^15.0.1",
+    "@typescript-eslint/eslint-plugin": "^4.22.0",
+    "@typescript-eslint/parser": "^4.22.0",
+    "chai": "^4.3.4",
+    "coveralls": "^3.0.2",
+    "eslint": "^7.25.0",
+    "istanbul": "^0.4.5",
+    "mocha": "^8.3.2",
+    "ts-node": "^9.1.1",
+    "typescript": "^4.2.4"
+  }
+}
