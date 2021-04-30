@@ -20,8 +20,6 @@ export const parseNoSuffix = (streetString: string | undefined): ParseNoSuffixRe
     let resultStreetName: string | undefined;
     const resultAddressLine1 = streetString?.match(reNoSuffix)?.[0];
 
-    // console.log('matched reNoSuffix', streetString.match(reNoSuffix));
-    // Check for a line2 prefix followed by a single word. If found peel that off as addressLine2
     const reLine2 = new RegExp('\\s(' + Object.keys(usLine2Prefixes).join('|') + ')\\.?\\s[a-zA-Z0-9_-]+$', 'i');
     if (streetString?.match(reLine2)) {
         resultAddressLine2 = streetString.match(reLine2)?.[0].trim();

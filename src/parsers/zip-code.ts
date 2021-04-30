@@ -32,8 +32,6 @@ export function parseZipCode(input: string | undefined): ParseZipCodeResult | un
 
     const match = input.match(/(?<zip5>\d{5})-?(?:(?<zip4>\d{4}))?$/);
 
-    console.log(match);
-
     if (match && !match?.groups) {
         return {
             originalInput: input,

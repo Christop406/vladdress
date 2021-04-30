@@ -16,7 +16,6 @@ export const parsePlaceName = (placeString: string | undefined, stateAbbreviatio
         return lowercasePlaceString?.endsWith(cityName.toLowerCase());
     });
 
-    // console.log('fc', foundCity, '->', lowercasePlaceString, '->', resultStateAbbreviation);
 
     let resultPlaceName: string | undefined;
 

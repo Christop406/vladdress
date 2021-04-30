@@ -3,6 +3,14 @@
         "resolveJsonModule": true,
         "baseUrl": "src",
         "outDir": "build",
-        "strictNullChecks": true
-    }
+        "strictNullChecks": true,
+        "declaration": true
+    },
+    "include": [
+        "src"
+    ],
+    "exclude": [
+        "node_modules",
+        "build"
+    ]
 }

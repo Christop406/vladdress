@@ -33,7 +33,6 @@ interface ParseStreetAddressResult {
 }
 
 export const parseStreetAddress = (streetString: string | undefined): ParseStreetAddressResult => {
-    console.log(streetString);
     if (!streetString) {
         throw new Error('No Street String Passed to parseStreetAddress');
     }
@@ -51,18 +50,11 @@ export const parseStreetAddress = (streetString: string | undefined): ParseStree
         let fullStreetName = match.groups?.streetName;
 
         if (fullStreetName && /\w\s+ave(?:nue)?.?\s\w/i.test(fullStreetName)) {
-            // console.log('daved', fullStreetName);
             resultStreetName = replaceCaseInsensitive(fullStreetName, 'avenue', true, 'Ave')?.replace(/\./g, '');
         } else {
             resultAddressLine1 = match[0];
 
-            // console.log(resultAddressLine1);
-            // console.log('restreet', match.groups);
-
-            // console.log(resultAddressLine1);
             streetString = streetString.replace(resultAddressLine1, "").trim(); // Carve off the first address line
-
-            console.log('ss2', streetString);
 
             if (streetString && streetString.length > 0) {
                 // Check if line2 data was already parsed
@@ -78,19 +70,14 @@ export const parseStreetAddress = (streetString: string | undefined): ParseStree
             // Check if directional is last element
 
             const uppercaseLine1 = resultAddressLine1.toUpperCase();
-            // console.log('UCL1', uppercaseLine1);
             const direction = Object.keys(usStreetDirectional).find((key) => {
                 return uppercaseLine1.endsWith(' ' + usStreetDirectional[key]) || uppercaseLine1.endsWith(' ' + key.toUpperCase());
             })
 
             if (direction) {
-                // console.log('direction', usStreetDirectional[direction]);
                 resultStreetDirection = usStreetDirectional[direction];
                 streetParts.pop();
             }
-
-            // Assume type is last and number is first   
-            // console.log('sp', streetParts);
 
             // If there are only 2 street parts (number and name) then its likely missing a "real" suffix and the street name just happened to match a suffix
             if (streetParts.length > 2) {
@@ -99,23 +86,15 @@ export const parseStreetAddress = (streetString: string | undefined): ParseStree
                 streetParts[streetParts.length - 1] = originalStreetType.replace(/\.$/, '');
                 const lowercaseStreetType = streetParts[streetParts.length - 1].toLowerCase();
                 const streetType = usStreetTypes[lowercaseStreetType];
-                // console.log('st', streetType);
-                // console.log('lcst', lowercaseStreetType);
+
                 if (streetType) {
                     resultStreetSuffix = toTitleCase(streetType.toLowerCase());
                     fullStreetName = replaceCaseInsensitive(fullStreetName, originalStreetType, true);
-                    // console.log('streetSuf', streetType, resultStreetSuffix);
                 }
             }
 
-            // console.log('sp6', streetParts);
-            // console.log('fsn', fullStreetName);
-
             resultStreetName = fullStreetName?.trim(); // Assume street name is everything in the middle
-            // console.log('sn', resultStreetName);
             const lowercaseStreetName = resultStreetName?.toLowerCase();
-            // console.log('lcsn', lowercaseStreetName);
-            // console.log(direction, resultStreetName);
             if (direction && resultStreetName) {
                 resultStreetName = resultStreetName?.replace(/\s\w+$/, '').trim();
             }
@@ -126,15 +105,11 @@ export const parseStreetAddress = (streetString: string | undefined): ParseStree
                 });
 
                 if (foundEnding) {
-                    // console.log('found an ending', foundEnding);
-                    // console.log(resultStreetName?.length, foundEnding.length);
                     resultStreetName = resultStreetName?.substring(0, resultStreetName.length - foundEnding.length).trim();
-                    // console.log(resultStreetName);
                 }
             }
-
-            // console.log(streetParts);
         }
+
         resultStreetName = toTitleCase(resultStreetName || '')
             .replace('Fm', 'FM');
         resultStreetNumber = match.groups?.streetNum;

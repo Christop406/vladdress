@@ -140,7 +140,6 @@ export const parseAddress = function (address: string): IParsedAddress {
         streetString = res.streetString;
         resultAddressLine1 = res.line1;
     } else if (matchesStreetAddress(streetString)) {
-        console.log('sa');
         const res = parseStreetAddress(streetString);
         resultAddressLine1 = res.line1;
         resultStreetNumber = res.streetNumber;
@@ -150,7 +149,6 @@ export const parseAddress = function (address: string): IParsedAddress {
         streetString = res.streetString;
         resultAddressLine2 ||= res.line2;
     } else if (matchesNoSuffix(streetString)) {
-        console.log('ns');
         const res = parseNoSuffix(streetString);
         resultAddressLine1 = res.line1;
         resultAddressLine2 = res.line2;
