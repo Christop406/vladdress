@@ -1,6 +1,6 @@
 {
   "name": "vladdress",
-  "version": "1.1.19",
+  "version": "1.0.0",
   "description": "Lightweight Street Address Parser Written in TypeScript",
   "scripts": {
     "pretest": "eslint test/**/*.ts --fix",
