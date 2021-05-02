@@ -1,6 +1,6 @@
 # Vladress 🧛‍♂️
 
-[![NPM](https://nodei.co/npm/vladdress.png?mini=true)](https://npmjs.org/package/vladdress)
+[![NPM_VERSION](https://img.shields.io/npm/v/vladdress)](https://npmjs.org/package/vladdress)
 
 ## Introduction
 
