@@ -8,24 +8,11 @@ import { parsePlaceName } from './parsers/city-state';
 import { matchesPOBox, parsePOBox } from './parsers/po-box';
 import { matchesStreetAddress, parseStreetAddress } from './parsers/street-address';
 import { matchesNoSuffix, parseNoSuffix } from './parsers/no-suffix';
+import { ParsedAddress } from './model/parsed-address';
 
-export interface IParsedAddress {
-    zipCode?: string;
-    zipCodePlusFour?: string;
-    formattedAddress?: string;
-    stateAbbreviation?: string;
-    stateName?: string;
-    placeName?: string;
-    addressLine1?: string;
-    addressLine2?: string;
-    streetDirection?: string;
-    streetNumber?: string;
-    streetSuffix?: string;
-    streetName?: string;
-    id?: string;
-}
 
-export const parseAddress = function (address: string): IParsedAddress {
+
+export const parseAddress = function (address: string): ParsedAddress {
     if (!address) {
         throw new Error('parseAddress: Argument must be a non-empty string.');
     }
@@ -67,9 +54,10 @@ export const parseAddress = function (address: string): IParsedAddress {
     const resultStateName = stateInfo.stateName;
     const cityString = stateInfo.trimmedString;
 
-    if (!resultStateAbbreviation || resultStateAbbreviation.length != 2) {
+    if (!resultStateAbbreviation || !resultStateName || resultStateAbbreviation.length != 2) {
         throw new Error('Can not parse address. State not found.');
     }
+    
 
     // Parse and remove city/place name
     let placeString: string | undefined;
@@ -84,6 +72,11 @@ export const parseAddress = function (address: string): IParsedAddress {
 
     const placeNameResult = parsePlaceName(placeString, resultStateAbbreviation);
     const resultPlaceName = placeNameResult.placeName;
+    
+    if (!resultPlaceName) {
+        throw new Error('No Place Name Specified');
+    }
+
     placeString = placeNameResult.placeString;
 
     // Parse the street data
@@ -160,18 +153,24 @@ export const parseAddress = function (address: string): IParsedAddress {
         throw new Error('Can not parse address. Invalid street address data. Input string: ' + address);
     }
 
+    if (!resultAddressLine1) {
+        throw new Error('Could not generate Address Line 1');
+    }
+
     let addressString = resultAddressLine1;
     if (resultAddressLine2) {
         addressString += ', ' + resultAddressLine2;
     }
 
     let resultFormattedAddress: string | undefined;
-    let resultId: string | undefined;
+    let resultId: string;
 
-    if (addressString && resultPlaceName && resultStateAbbreviation && resultZipCode) {
-        const idString = addressString + ", " + resultPlaceName + ", " + resultStateAbbreviation + " " + resultZipCode;
+    if (addressString && resultPlaceName && resultStateAbbreviation) {
+        const idString = addressString + ", " + resultPlaceName + ", " + resultStateAbbreviation + (resultZipCode ?  (" " + resultZipCode) : '');
         resultFormattedAddress = idString;
-        resultId = encodeURI(idString.replace(/ /g, '-').replace(/#/g, '-').replace(/\//g, '-').replace(/\./g, '-'));
+        resultId = encodeURI(idString.replace(/[\s#\/\.\,]+/g, '-').toLowerCase());
+    } else {
+        throw new Error('Required Address Parts Not Found.');
     }
 
     return {
