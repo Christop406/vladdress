@@ -15,7 +15,7 @@ module.exports = {
         {
             files: ['test/**/*.spec.ts'],
             rules: {
-                
+                '@typescript-eslint/no-explicit-any': ['off']
             }
         }
     ]
