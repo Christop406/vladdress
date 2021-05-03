@@ -1,5 +1,5 @@
 import { replaceCaseInsensitive, toTitleCase } from "../utils/strings";
-import * as usStreetTypes from '../data/us-street-types.json';
+import * as usStreetTypes from '../data/us/street-types.json';
 
 export const streetAddressRegex = /^(?<streetNum>(?:\d+\w*|\w*\d+)?)?\s*(?<streetName>.+)$/i;
 
