@@ -1,4 +1,4 @@
-# Vladress 🧛‍♂️
+# Vladdress 🧛‍♂️
 
 [![NPM_VERSION](https://img.shields.io/npm/v/vladdress)](https://npmjs.org/package/vladdress)
 
