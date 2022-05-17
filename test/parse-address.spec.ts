@@ -261,6 +261,14 @@ describe('Address Parser (parseAddress)', function () {
             expect(result.stateAbbreviation).to.equal('NC');
             expect(result.zipCode).to.equal('28202');
         });
+
+        it('Full Address w/ option set', () => {
+            const result = addresser.parseAddress('221 N Cedar St, Charlotte, NC 28202');
+
+            expect(result.zipCode).to.equal('28202');
+            expect(result.streetName?.trim().length).to.be.greaterThan(0);
+            expect(result.streetNumber).to.exist;
+        });
     });
 
     describe('PO Box', () => {

@@ -106,9 +106,11 @@ export const parseAddress = function (address: string, options?: Options): Parti
         temporaryLine2 = part.trim();
     }
 
-    if (addressParts.length === 0 && !options?.allowPartialAddress) {
-        throw new Error('Can not parse address. Invalid street address data. Input string: ' + address);
-    } else if (options?.allowPartialAddress) {
+    if (addressParts.length === 0) {
+        if (!options?.allowPartialAddress) {
+            throw new Error('Can not parse address. Invalid street address data. Input string: ' + address);
+        }
+
         const formattedAddress = makeFormattedAddress(
             resultStateAbbreviation,
             resultPlaceName,
