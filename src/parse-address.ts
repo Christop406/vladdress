@@ -48,7 +48,7 @@ export const parseAddress = function (address: string, options?: Options): Parti
         addressParts[addressParts.length - 1] = cityStateString;
     } else {
         addressParts.splice(-1, 1);
-        cityStateString = addressParts[addressParts.length - 1].trim();
+        cityStateString = addressParts[addressParts.length - 1]?.trim();
     }
 
     const stateInfo = getStateInfo(cityStateString);
@@ -69,7 +69,7 @@ export const parseAddress = function (address: string, options?: Options): Parti
         placeString = getLastElement(addressParts);
     } else {
         addressParts.splice(-1, 1);
-        placeString = addressParts[addressParts.length - 1].trim();
+        placeString = addressParts[addressParts.length - 1]?.trim();
     }
 
     const placeNameResult = parsePlaceName(placeString, resultStateAbbreviation);
@@ -103,7 +103,7 @@ export const parseAddress = function (address: string, options?: Options): Parti
 
         const part = addressParts.splice(line2Index, 1)[0];
 
-        temporaryLine2 = part.trim();
+        temporaryLine2 = part?.trim();
     }
 
     if (addressParts.length === 0) {
@@ -126,7 +126,7 @@ export const parseAddress = function (address: string, options?: Options): Parti
         };
     }
 
-    streetString = addressParts[0].trim();
+    streetString = addressParts[0]?.trim();
 
     if (!temporaryLine2) {
         const line2Type = validateUsLine2Type(streetString);
@@ -134,8 +134,8 @@ export const parseAddress = function (address: string, options?: Options): Parti
             const upperSS = streetString.toUpperCase();
 
             const idx = upperSS.indexOf(line2Type);
-            temporaryLine2 = streetString.substring(idx);
-            streetString = streetString.replace(temporaryLine2, "").trim();
+            temporaryLine2 = streetString?.substring(idx);
+            streetString = streetString?.replace(temporaryLine2, "")?.trim();
         }
     }
 
