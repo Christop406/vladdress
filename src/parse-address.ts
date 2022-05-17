@@ -10,7 +10,11 @@ import { matchesStreetAddress, parseStreetAddress } from './parsers/street-addre
 import { matchesNoSuffix, parseNoSuffix } from './parsers/no-suffix';
 import { ParsedAddress } from './model/parsed-address';
 
-export const parseAddress = function (address: string): ParsedAddress {
+interface Options {
+    allowPartialAddress?: boolean;
+}
+
+export const parseAddress = function (address: string, options?: Options): Partial<ParsedAddress> {
     if (!address) {
         throw new Error('parseAddress: Argument must be a non-empty string.');
     }
@@ -55,7 +59,7 @@ export const parseAddress = function (address: string): ParsedAddress {
     if (!resultStateAbbreviation || !resultStateName || resultStateAbbreviation.length != 2) {
         throw new Error('Can not parse address. State not found.');
     }
-    
+
 
     // Parse and remove city/place name
     let placeString: string | undefined;
@@ -70,7 +74,7 @@ export const parseAddress = function (address: string): ParsedAddress {
 
     const placeNameResult = parsePlaceName(placeString, resultStateAbbreviation);
     const resultPlaceName = placeNameResult.placeName;
-    
+
     if (!resultPlaceName) {
         throw new Error('No Place Name Specified');
     }
@@ -102,8 +106,22 @@ export const parseAddress = function (address: string): ParsedAddress {
         temporaryLine2 = part.trim();
     }
 
-    if (addressParts.length === 0) {
+    if (addressParts.length === 0 && !options?.allowPartialAddress) {
         throw new Error('Can not parse address. Invalid street address data. Input string: ' + address);
+    } else if (options?.allowPartialAddress) {
+        const formattedAddress = makeFormattedAddress(
+            resultStateAbbreviation,
+            resultPlaceName,
+        );
+        return {
+            formattedAddress,
+            id: makeAddressId(formattedAddress),
+            stateAbbreviation: resultStateAbbreviation,
+            stateName: resultStateName,
+            placeName: resultPlaceName,
+            zipCode: resultZipCode,
+            zipCodePlusFour: resultZip4,
+        };
     }
 
     streetString = addressParts[0].trim();
@@ -161,12 +179,14 @@ export const parseAddress = function (address: string): ParsedAddress {
     }
 
     let resultFormattedAddress: string | undefined;
-    let resultId: string;
 
     if (addressString && resultPlaceName && resultStateAbbreviation) {
-        const idString = addressString + ", " + resultPlaceName + ", " + resultStateAbbreviation + (resultZipCode ?  (" " + resultZipCode) : '');
-        resultFormattedAddress = idString;
-        resultId = encodeURI(idString.replace(/[\s#/.,]+/g, '-').toLowerCase());
+        resultFormattedAddress = makeFormattedAddress(
+            resultStateAbbreviation,
+            resultPlaceName,
+            addressString,
+            resultZipCode,
+        );
     } else {
         throw new Error('Required Address Parts Not Found.');
     }
@@ -183,7 +203,15 @@ export const parseAddress = function (address: string): ParsedAddress {
         streetSuffix: resultStreetSuffix,
         streetDirection: resultStreetDirection,
         streetName: resultStreetName,
-        id: resultId,
+        id: makeAddressId(resultFormattedAddress),
         formattedAddress: resultFormattedAddress,
-    }
+    };
+};
+
+const makeFormattedAddress = (stateCode: string, placeName: string, line1?: string, zipCode?: string): string => {
+    return (line1 ? (line1 + ", ") : '') + placeName + ", " + stateCode + (zipCode ? (" " + zipCode) : '');
+};
+
+const makeAddressId = (formattedAddress: string): string => {
+    return encodeURI(formattedAddress.replace(/[\s#/.,]+/g, '-').toLowerCase());
 };
